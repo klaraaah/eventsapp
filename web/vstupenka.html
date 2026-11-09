@@ -2,6 +2,11 @@
 <html lang="cs">
 <head>
 <meta charset="utf-8">
+<!-- Bezpečnost: GitHub Pages neumí hlavičky (_headers platí jen na Netlify), proto CSP i tady -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<!-- Ochrana proti vložení stránky do cizího rámečku (clickjacking) – frame-ancestors v <meta> nefunguje -->
+<style id="antiClickjack">html{display:none!important}</style>
+<script>if (self === top) { var ac = document.getElementById('antiClickjack'); ac.parentNode.removeChild(ac); } else { top.location = self.location; }</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Moje vstupenka</title>
 <meta name="theme-color" content="#1E1F2E">
@@ -135,7 +140,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
         </div>
         <div class="t-qr">
           <div class="qr" id="qr" role="img" aria-label="QR kód vstupenky"></div>
-          <small>U vstupu ukažte tento kód. Doprovod odbavíme spolu s vámi. Kód ani odkaz na tuto stránku nikomu nepřeposílejte.</small>
+          <small>U vstupu ukažte tento kód. Kód ani odkaz na tuto stránku nikomu nepřeposílejte.</small>
         </div>
         <div class="t-cut" aria-hidden="true"></div>
         <div class="t-body">
@@ -170,7 +175,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
         <!-- úpravy -->
         <section class="panel" id="editPanel" aria-labelledby="editTitle">
           <span class="label">Údaje</span>
-          <h3 id="editTitle">Strava, doprovod a doprava</h3>
+          <h3 id="editTitle">Strava a doprava</h3>
           <p>Změnilo se něco? Upravte to tady, ať víme, co nachystat.</p>
           <form class="edit" id="editForm" novalidate>
             <fieldset class="fs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Strava</legend><div class="chips" id="eDiet"></div></fieldset>
@@ -184,11 +189,6 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
           </form>
         </section>
 
-        <section class="panel" aria-labelledby="tlTitle">
-          <span class="label">Co vás čeká</span>
-          <h3 id="tlTitle">Harmonogram</h3>
-          <ol class="timeline" id="timeline"></ol>
-        </section>
       </div>
     </div>
   </div>
@@ -301,13 +301,6 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     $('#editPanel').hidden = t.attendance === 'NE' || over();
     if (!$('#editPanel').hidden) fillEdit();
 
-    // harmonogram podle automatizací akce
-    const tl = [[F.day(t.registered), 'Registrace a e-mail s QR vstupenkou', true]];
-    const at = (k) => API.automationAt(ev, k);
-    if (at('rsvp')) tl.push([F.day(at('rsvp').toISOString()), 'E-mail s potvrzením účasti a QR vstupenkou znovu', now >= at('rsvp')]);
-    if (at('remind')) tl.push([F.day(at('remind').toISOString()), 'Připomínka: kdyby se cokoliv změnilo, dejte vědět', now >= at('remind')]);
-    tl.push([F.day(ev.date), `${ev.name}. U vstupu ukažte QR kód.`, over()]);
-    $('#timeline').innerHTML = tl.map((x) => `<li class="${x[2] ? 'past' : ''}"><time>${x[0]}</time><span>${esc(x[1])}</span></li>`).join('');
   }
 
   // ---------- účast ----------
