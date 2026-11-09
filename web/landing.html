@@ -11,8 +11,9 @@
  * Záložní tvar bez přesměrování: landing.html?c=cez&e=dukovany
  * APP_BASE = složka, ve které web běží (na doméně "/"; v podsložce např. "/eventy/"). */
 (function () {
-  var APP_BASE = '/';
+  // GitHub Pages projektu běží v podsložce (uzivatel.github.io/nazev-repa/) – pozná se samo
   var p = location.pathname, i = p.lastIndexOf('/landing.html');
+  var APP_BASE = /\.github\.io$/.test(location.hostname) && p.split('/')[1] ? '/' + p.split('/')[1] + '/' : '/';
   var root = (i >= 0 || location.protocol === 'file:') ? p.slice(0, p.lastIndexOf('/') + 1) : APP_BASE;
   document.write('<base href="' + root + '">');
   window.LANDING_ROUTE = (function () {
