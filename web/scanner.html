@@ -8,8 +8,8 @@
 <style id="antiClickjack">html{display:none!important}</style>
 <script>if (self === top) { var ac = document.getElementById('antiClickjack'); ac.parentNode.removeChild(ac); } else { top.location = self.location; }</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Odbavení · EventDesk</title>
-<meta name="theme-color" content="#1E1F2E">
+<title>Odbavení · Yashica</title>
+<meta name="theme-color" content="#12112A">
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <link rel="stylesheet" href="styles.css">
@@ -22,7 +22,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 .pin { justify-content: space-between; padding: max(32px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom)); max-width: 420px; margin: 0 auto; width: 100%; }
 .pin h1 { font: 600 44px/1 var(--sans); letter-spacing: -.03em; margin: 18px 0 28px; }
 .pin-logo { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 36px; font: 700 18px/1 var(--sans); letter-spacing: -.01em; color: #fff; }
-.pin-logo i { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #5B7CFF, #8F5BFF); display: grid; place-items: center; font: 800 14px/1 var(--sans); font-style: normal; }
+.pin-logo i { width: 28px; height: 28px; border-radius: 8px; background: var(--grad); display: grid; place-items: center; font: 800 14px/1 var(--sans); font-style: normal; }
 .dots { display: flex; gap: 14px; min-height: 18px; }
 .dots i { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line-2); transition: all .15s; }
 .dots i.on { background: var(--signal); border-color: var(--signal); }
@@ -32,7 +32,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 .pin-hint { color: var(--muted); font: 600 12px/1.4 var(--mono); margin-top: 6px; }
 .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .key {
-  height: 70px; border-radius: 0; border: 1px solid var(--line); background: var(--bg-2);
+  height: 70px; border-radius: 16px; border: 1px solid var(--line); background: var(--bg-2);
   font: 600 28px/1 var(--sans); cursor: pointer; color: var(--text); transition: background .1s;
 }
 .key:active { background: var(--bg-3); }
@@ -50,7 +50,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 .bar { grid-column: 1 / -1; height: 4px; border-radius: 0; background: var(--bg-3); overflow: hidden; }
 .bar i { display: block; height: 100%; width: 0; background: var(--signal); transition: width .5s; }
 .top-actions { display: flex; gap: 8px; }
-.icon-btn { width: 44px; height: 44px; border-radius: 0; color: var(--text); border: 1px solid var(--line-2); background: transparent; cursor: pointer; display: grid; place-items: center; }
+.icon-btn { width: 44px; height: 44px; border-radius: 12px; color: var(--text); border: 1px solid var(--line-2); background: transparent; cursor: pointer; display: grid; place-items: center; }
 .icon-btn svg { width: 20px; height: 20px; }
 
 .viewport { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; }
@@ -89,7 +89,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 .r-guests .k { font-weight: 700; font-size: 17px; }
 .r-guests small { display: block; font-weight: 500; opacity: .75; font-size: 13px; }
 .stepper { display: flex; align-items: center; gap: 4px; }
-.stepper button { width: 48px; height: 48px; border-radius: 0; border: 0; background: rgba(0, 0, 0, .16); font: 600 26px/1 var(--sans); cursor: pointer; color: inherit; }
+.stepper button { width: 48px; height: 48px; border-radius: 12px; border: 0; background: rgba(0, 0, 0, .16); font: 600 26px/1 var(--sans); cursor: pointer; color: inherit; }
 .stepper output { min-width: 40px; text-align: center; font: 600 30px/1 var(--sans); }
 .r-diets { list-style: none; padding: 0; margin: 14px 0 0; font-size: 15px; }
 .r-diets li { padding: 7px 0; border-bottom: 1px solid rgba(0, 0, 0, .12); display: flex; justify-content: space-between; gap: 12px; }
@@ -98,7 +98,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 .r-note { margin-top: 12px; padding: 10px 12px; background: rgba(0, 0, 0, .14); font-weight: 600; font-size: 15px; }
 .r-text { font-size: 19px; margin-top: 24px; max-width: 30ch; }
 .r-actions { margin-top: auto; padding-top: 18px; display: flex; gap: 10px; }
-.r-actions button { flex: 1; min-height: 60px; border-radius: 0; border: 0; cursor: pointer; font: 600 16px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; }
+.r-actions button { flex: 1; min-height: 60px; border-radius: 16px; border: 0; cursor: pointer; font: 600 16px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; }
 .r-next { background: var(--ink); color: #fff; font-size: 18px !important; }
 .result.stop .r-next { background: #fff; color: var(--ink); }
 .r-sec { background: rgba(0, 0, 0, .14); color: inherit; flex: 0 0 auto !important; padding: 0 18px; font-size: 14px !important; }
@@ -110,7 +110,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 .sheet { position: fixed; inset: 0; z-index: 35; background: var(--bg); display: flex; flex-direction: column; padding: max(14px, env(safe-area-inset-top)) 16px 16px; }
 .sheet-head { display: flex; gap: 10px; }
 .sheet-head input {
-  flex: 1; min-height: 54px; padding: 0 16px; border-radius: 0; border: 1px solid var(--line-2);
+  flex: 1; min-height: 54px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--line-2);
   background: var(--bg-2); color: var(--text); font: 500 18px/1 var(--sans);
 }
 .sheet-head input:focus { outline: none; border-color: var(--signal); }
@@ -129,7 +129,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 /* ---------- VÝBĚR AKCE ---------- */
 .evsel { padding: max(32px, env(safe-area-inset-top)) 20px 24px; max-width: 460px; margin: 0 auto; width: 100%; }
 .evsel h1 { font: 600 36px/1.05 var(--sans); letter-spacing: -.03em; margin: 18px 0 24px; }
-.evbtn { display: grid; gap: 4px; width: 100%; text-align: left; padding: 20px; margin-bottom: 10px; border: 1px solid var(--line-2); background: var(--bg-2); color: var(--text); cursor: pointer; }
+.evbtn { display: grid; gap: 4px; width: 100%; text-align: left; padding: 20px; margin-bottom: 10px; border: 1px solid var(--line-2); border-radius: 16px; background: var(--bg-2); color: var(--text); cursor: pointer; }
 .evbtn b { font-size: 24px; font-weight: 600; letter-spacing: -.02em; }
 .evbtn span { color: var(--muted); font-size: 15px; }
 .evbtn em { font-style: normal; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--brand); }
@@ -144,7 +144,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 <!-- PIN -->
 <section class="screen pin" id="pinScreen">
   <div>
-    <div class="pin-logo"><i>E</i>EventDesk</div>
+    <div class="pin-logo"><i>Y</i>Yashica</div>
     <div class="label">Odbavení u vstupu</div>
     <h1>Zadejte PIN</h1>
     <div class="dots" id="dots" aria-hidden="true"></div>
@@ -161,7 +161,7 @@ body { background: var(--bg); overscroll-behavior: none; }
 
 <!-- VÝBĚR AKCE -->
 <section class="screen evsel" id="evScreen" hidden>
-  <div class="pin-logo"><i>E</i>EventDesk</div>
+  <div class="pin-logo"><i>Y</i>Yashica</div>
   <div class="label">Odbavení u vstupu</div>
   <h1>Kterou akci odbavujete?</h1>
   <div id="evList"></div>
