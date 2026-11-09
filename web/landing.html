@@ -2,6 +2,11 @@
 <html lang="cs">
 <head>
 <meta charset="utf-8">
+<!-- Bezpečnost: GitHub Pages neumí hlavičky (_headers platí jen na Netlify), proto CSP i tady -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<!-- Ochrana proti vložení stránky do cizího rámečku (clickjacking) – frame-ancestors v <meta> nefunguje -->
+<style id="antiClickjack">html{display:none!important}</style>
+<script>if (self === top) { var ac = document.getElementById('antiClickjack'); ac.parentNode.removeChild(ac); } else { top.location = self.location; }</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>
 /* Jedna šablona pro všechny klienty a akce:
@@ -74,6 +79,7 @@ body { background: var(--white); }
 /* ---------- přehled akcí klienta ---------- */
 .sec { padding: clamp(56px, 8vw, 112px) 0; }
 .sec h2 { font: 600 clamp(30px, 4vw, 48px)/1.05 var(--sans); letter-spacing: -.03em; margin: 16px 0 0; }
+.sec.reg { scroll-margin-top: 80px; }
 .client-hero { background: var(--gray); padding: clamp(56px, 8vw, 104px) 0 clamp(40px, 6vw, 72px); }
 .client-hero h1 { font: 600 clamp(38px, 5.4vw, 72px)/1.02 var(--sans); letter-spacing: -.035em; margin: 20px 0 0; max-width: 18ch; }
 .client-hero p { color: var(--muted); font-size: 18px; margin: 20px 0 0; max-width: 48ch; }
@@ -399,6 +405,17 @@ body { background: var(--white); }
       done.hidden = true; form.hidden = false; form.elements.name.focus();
     });
   }
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href="#registrace"]');
+    if (!a) return;
+    e.preventDefault();
+    const sec = document.getElementById('registrace');
+    if (!sec) return;
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const first = sec.querySelector('input[name=name]');
+    if (first) setTimeout(() => first.focus({ preventScroll: true }), 500);
+  });
 
   init();
 })();
