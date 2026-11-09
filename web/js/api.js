@@ -22,7 +22,7 @@
   /** Tajný odkaz účastníka (správa registrace). */
   function parseToken(raw) {
     const s = String(raw || '').trim();
-    const m = s.match(/[?&]t=([\w-]{6,64})/);
+    const m = s.match(/[?&#]t=([\w-]{6,64})/);
     if (m) return m[1];
     return /^[\w-]{6,64}$/.test(s) ? s : '';
   }
@@ -57,7 +57,7 @@
     pretty() { return location.protocol !== 'file:' && P.PRETTY_URLS !== false; },
     client(c) { return urls.pretty() ? urls.root() + c.slug : urls.root() + 'landing.html?c=' + encodeURIComponent(c.slug); },
     event(c, ev) { return urls.pretty() ? urls.root() + c.slug + '/' + ev.slug : urls.root() + 'landing.html?c=' + encodeURIComponent(c.slug) + '&e=' + encodeURIComponent(ev.slug); },
-    ticket(token) { return urls.root() + 'vstupenka.html?t=' + encodeURIComponent(token); },
+    ticket(token) { return urls.root() + 'vstupenka.html#t=' + encodeURIComponent(token); }, // za # → neposílá se serveru
     scanner() { return urls.root() + 'scanner.html'; },
   };
 
@@ -209,7 +209,7 @@
         event = events.find((e) => e.slug === String(d.event).toLowerCase());
         if (!event) throw fail('Tuhle akci jsme nenašli. Zkontrolujte prosím odkaz.', 'NOT_FOUND');
       }
-      return { client: clone(c), events: events.map(publicEvent), event: event ? publicEvent(event) : null, now: now(s).toISOString() };
+      return { client: clone(c), events: events.map(publicEvent), event: event ? publicEvent(event) : null, privacy: clone(SEED.privacy || {}), now: now(s).toISOString() };
     },
     register(s, d) {
       const ev = evById(s, d.event);

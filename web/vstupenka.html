@@ -173,6 +173,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
           <form class="edit" id="editForm" novalidate>
             <fieldset class="fs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Strava</legend><div class="chips" id="eDiet"></div></fieldset>
             <label class="field"><span class="f-label">Alergie <small>(nepovinné)</small></span><input class="input" name="allergies" maxlength="200"></label>
+            <label class="check" id="eHealth"><input type="checkbox" name="healthConsent"><span>Souhlasím se zpracováním údaje o alergii (zdravotní údaj) výhradně pro přípravu jídla na této akci.</span></label>
             <fieldset class="fs" id="eTransportFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprava</legend><div class="chips" id="eTransport"></div></fieldset>
             <fieldset class="fs" id="eGuestFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprovod</legend><div class="chips" id="eGuests"></div><div id="eGuestRows" style="display:grid;gap:16px"></div></fieldset>
             <div class="edit-foot">
@@ -198,7 +199,9 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
   const F = API.fmt;
   const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>';
 
-  const params = new URLSearchParams(location.search);
+  // tajný odkaz je za # (neposílá se serveru webu); starší e-maily mají ?t=
+  const fromHash = /[#&]t=/.test(location.hash);
+  const params = new URLSearchParams(fromHash ? location.hash.slice(1) : location.search);
   const token = API.parseToken(params.get('t') || '') || API.demoLastToken();
   const fromMail = ({ ano: 'ANO', ne: 'NE' })[(params.get('a') || '').toLowerCase()] || '';
   let t = null, ev = null, client = null, now = new Date(), qrFor = '';
@@ -217,7 +220,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
       // Odkaz z e-mailu (?a=ano|ne) NIC nemění – poštovní antiviry odkazy předotevírají.
       // Odpověď se uloží až po kliknutí na „Potvrdit“ na stránce.
       params.delete('a');
-      history.replaceState(null, '', location.pathname + '?' + params.toString());
+      history.replaceState(null, '', location.pathname + (fromHash ? '#' : '?') + params.toString());
       render(); show('vTicket');
       if (fromMail && fromMail !== t.attendance && !over()) askConfirm(fromMail);
       else if (fromMail) banner(fromMail);
@@ -311,6 +314,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     const f = $('#editForm');
     $('#eDiet').innerHTML = chips('diet', r.diets, t.diet);
     f.elements.allergies.value = t.allergies || '';
+    f.elements.healthConsent.checked = !!t.allergies;
     if ((r.transport || []).length) $('#eTransport').innerHTML = chips('transport', r.transport, t.transport || r.transport[0]);
     else $('#eTransportFs').hidden = true;
     if (r.maxGuests) {
@@ -340,7 +344,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
         token, attend: null,
         diet: ($('input[name=diet]:checked', f) || {}).value,
         transport: ($('input[name=transport]:checked', f) || {}).value || '',
-        allergies: f.elements.allergies.value,
+        allergies: f.elements.allergies.value, healthConsent: f.elements.healthConsent.checked,
         guests: g.length, guestNames: g.map((x) => $('input', x).value), guestDiets: g.map((x) => $('select', x).value),
       }));
       filledFor = ''; render();

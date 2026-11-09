@@ -146,5 +146,8 @@
     return out;
   }
 
-  window.DEMO_SEED = { version: 5, clients, events, generatePeople };
+  // stejná struktura jako CONFIG.PRIVACY v Code.gs (v demu nevyplněno)
+  const privacy = { controller: '', processor: '', contact: '', retentionDays: 30 };
+
+  window.DEMO_SEED = { version: 5, clients, events, privacy, generatePeople };
 })();
