@@ -23,7 +23,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 .page-head { margin-bottom: 32px; }
 .page-head h1 { font: 600 clamp(32px, 4.4vw, 52px)/1.05 var(--sans); letter-spacing: -.03em; margin: 14px 0 0; }
 
-.banner { display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px; margin-bottom: 24px; background: var(--white); border-left: 4px solid var(--ok); animation: slide .4s var(--ease);  border-radius: var(--r); box-shadow: var(--shadow); }
+.banner { display: flex; gap: 16px; align-items: flex-start; padding: 20px 24px; margin-bottom: 24px; background: var(--white); border-left: 4px solid var(--ok); animation: slide .4s var(--ease); }
 .banner.no { border-color: var(--muted-2); }
 .banner .ico { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--ok); color: #fff; }
 .banner.no .ico { background: var(--dark); }
@@ -39,14 +39,14 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
 
 /* ---------- vstupenka ---------- */
-.ticket { background: var(--white); position: relative; border-radius: var(--r-lg); filter: drop-shadow(0 24px 40px rgba(18,17,42,.14)); }
-.t-head { background: var(--dark); color: var(--white); padding: 26px 28px; position: relative; overflow: hidden; border-radius: var(--r-lg) var(--r-lg) 0 0; isolation: isolate; }
-.t-head::after { content: ""; position: absolute; z-index: -1; right: -90px; top: -110px; width: 260px; height: 260px; border-radius: 50%; background: var(--grad); filter: blur(50px); opacity: .75; }
+.ticket { background: var(--white); position: relative; filter: drop-shadow(0 24px 32px rgba(30,31,46,.12)); }
+.t-head { background: var(--dark); color: var(--white); padding: 24px 28px; position: relative; overflow: hidden; }
+.t-head::after { content: ""; position: absolute; right: -40px; top: -40px; width: 140px; height: 140px; border-radius: 50%; border: 24px solid var(--brand); opacity: .9; }
 .t-head .k { font: 600 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.6); }
 .t-head h2 { font: 600 30px/1.05 var(--sans); letter-spacing: -.02em; margin: 10px 0 6px; position: relative; z-index: 1; }
 .t-head p { margin: 0; color: rgba(255,255,255,.75); font-size: 15px; position: relative; z-index: 1; }
 .t-qr { padding: 28px 28px 20px; display: grid; justify-items: center; gap: 14px; }
-.qr { width: 100%; max-width: 280px; aspect-ratio: 1; padding: 14px; background: #fff; border: 1px solid var(--gray-2); border-radius: 18px; }
+.qr { width: 100%; max-width: 280px; aspect-ratio: 1; padding: 14px; background: #fff; border: 1px solid var(--gray-2); }
 .qr canvas, .qr img { width: 100% !important; height: auto !important; image-rendering: pixelated; }
 .t-qr small { color: var(--muted); font-size: 13px; text-align: center; }
 .t-cut { position: relative; height: 0; border-top: 2px dashed var(--gray-2); margin: 0 18px; }
@@ -59,7 +59,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 .t-rows div { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--gray-2); font-size: 15px; }
 .t-rows dt { color: var(--muted); }
 .t-rows dd { margin: 0; font-weight: 600; text-align: right; }
-.badge { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; font: 600 13px/1 var(--sans); }
+.badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; font: 600 13px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; }
 .badge::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
 .badge.ok { background: var(--ok-soft); color: var(--ok); }
 .badge.no { background: var(--gray-2); color: var(--muted); }
@@ -68,14 +68,14 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 .t-actions { display: grid; gap: 10px; padding: 0 28px 28px; }
 
 /* ---------- panel účasti ---------- */
-.panel { background: var(--white); padding: clamp(24px, 3.4vw, 40px); border-radius: var(--r-lg); box-shadow: var(--shadow); border: 1px solid rgba(18,17,42,.05); }
+.panel { background: var(--white); padding: clamp(24px, 3.4vw, 40px); }
 .panel + .panel { margin-top: 24px; }
 .panel h3 { font: 600 26px/1.15 var(--sans); letter-spacing: -.02em; margin: 12px 0 8px; }
 .panel > p { color: var(--muted); margin: 0 0 24px; }
 .answer { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .ans {
   display: flex; align-items: center; gap: 14px; min-height: 72px; padding: 16px 20px; cursor: pointer; text-align: left;
-  border: 1.5px solid var(--line); border-radius: var(--r); background: var(--white); font-size: 18px; font-weight: 600; transition: all .15s;
+  border: 1px solid var(--line); background: var(--white); font-size: 18px; font-weight: 600; transition: all .15s;
 }
 .ans .dot { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--muted-2); display: grid; place-items: center; transition: all .15s; }
 .ans small { display: block; font-size: 14px; font-weight: 400; color: var(--muted); }
@@ -87,7 +87,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 .ans[aria-pressed="true"] .dot::after { content: ""; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
 .ans:disabled { cursor: wait; opacity: .7; }
 @media (max-width: 520px) { .answer { grid-template-columns: 1fr; } }
-.note { margin-top: 20px; padding: 16px 18px; background: var(--gray); border-radius: var(--r-sm); font-size: 15px; color: var(--muted); }
+.note { margin-top: 20px; padding: 16px 18px; background: var(--gray); font-size: 15px; color: var(--muted); }
 .note b { color: var(--dark); }
 
 .edit { display: grid; gap: 22px; }
@@ -97,6 +97,12 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 .saved { color: var(--ok); font-weight: 600; font-size: 15px; opacity: 0; transition: opacity .3s; }
 .saved.show { opacity: 1; }
 
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; }
+.timeline li { display: grid; grid-template-columns: 64px 1fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--gray-2); font-size: 15px; color: var(--muted); }
+.timeline li:last-child { border: 0; }
+.timeline time { font-weight: 600; color: var(--dark); }
+.timeline li.past { opacity: .55; }
+.timeline li.past time::after { content: " ✓"; color: var(--ok); }
 
 </style>
 </head>
@@ -104,7 +110,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 
 <header class="site-head">
   <div class="wrap">
-    <a class="brandmark" id="logoLink" href="#"><i>Y</i><span><span id="agencyName">Yashica</span><small>Pořadatel akce</small></span></a>
+    <a class="head-title" id="logoLink" href="#"></a>
     <nav class="head-nav"><a id="backLink" href="#">Stránka akce</a></nav>
   </div>
 </header>
@@ -213,8 +219,8 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     if (!token) { $('#errText').textContent = 'V odkazu chybí kód vstupenky. Otevřete prosím odkaz z e-mailu.'; return show('vError'); }
     try {
       apply(await API.call('ticket', { token, raw: API.demo ? location.href : undefined }));
-      $('#agencyName').textContent = window.PLATFORM.AGENCY;
-      $('.brandmark i').textContent = (window.PLATFORM.AGENCY || 'A')[0];
+      UI.applyBrand(client);
+      $('#logoLink').textContent = ev.name;
       $('#logoLink').href = API.urls.event(client, ev);
       $('#backLink').href = API.urls.event(client, ev);
       // Odkaz z e-mailu (?a=ano|ne) NIC nemění – poštovní antiviry odkazy předotevírají.
