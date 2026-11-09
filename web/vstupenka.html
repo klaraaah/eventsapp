@@ -108,12 +108,6 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 </head>
 <body>
 
-<header class="site-head">
-  <div class="wrap">
-    <a class="head-title" id="logoLink" href="#"></a>
-    <nav class="head-nav"><a id="backLink" href="#">Stránka akce</a></nav>
-  </div>
-</header>
 
 <main>
   <div class="state" id="vLoading"><span class="spinner" style="width:36px;height:36px;color:var(--brand)"></span><p>Načítám vaši vstupenku…</p></div>
@@ -220,9 +214,6 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     try {
       apply(await API.call('ticket', { token, raw: API.demo ? location.href : undefined }));
       UI.applyBrand(client);
-      $('#logoLink').textContent = ev.name;
-      $('#logoLink').href = API.urls.event(client, ev);
-      $('#backLink').href = API.urls.event(client, ev);
       // Odkaz z e-mailu (?a=ano|ne) NIC nemění – poštovní antiviry odkazy předotevírají.
       // Odpověď se uloží až po kliknutí na „Potvrdit“ na stránce.
       params.delete('a');

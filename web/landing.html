@@ -40,13 +40,10 @@ body { background: var(--white); }
 .page-state h1 { font: 600 34px/1.15 var(--sans); letter-spacing: -.02em; margin: 16px 0 10px; }
 .page-state p { color: var(--muted); max-width: 46ch; margin: 0 auto; }
 
-.site-head .back { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; }
-.site-head .back:hover { color: var(--brand); }
-.site-head .back svg { width: 16px; height: 16px; }
 
 /* ---------- HERO ---------- */
 .hero { background: var(--gray); overflow: hidden; }
-.hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; min-height: min(600px, calc(100vh - 110px)); }
+.hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; min-height: min(640px, 100vh); }
 .hero-copy { display: flex; flex-direction: column; justify-content: center; padding: 72px 56px 72px 0; }
 .hero h1 { font: 600 clamp(40px, 5.6vw, 76px)/1 var(--sans); letter-spacing: -.035em; margin: 22px 0 0; max-width: 14ch; }
 .hero h1 .accent { color: var(--brand); }
@@ -79,7 +76,7 @@ body { background: var(--white); }
 /* ---------- přehled akcí klienta ---------- */
 .sec { padding: clamp(56px, 8vw, 112px) 0; }
 .sec h2 { font: 600 clamp(30px, 4vw, 48px)/1.05 var(--sans); letter-spacing: -.03em; margin: 16px 0 0; }
-.sec.reg { scroll-margin-top: 80px; }
+.sec.reg { scroll-margin-top: 0; }
 .client-hero { background: var(--gray); padding: clamp(56px, 8vw, 104px) 0 clamp(40px, 6vw, 72px); }
 .client-hero h1 { font: 600 clamp(38px, 5.4vw, 72px)/1.02 var(--sans); letter-spacing: -.035em; margin: 20px 0 0; max-width: 18ch; }
 .client-hero p { color: var(--muted); font-size: 18px; margin: 20px 0 0; max-width: 48ch; }
@@ -149,12 +146,6 @@ body { background: var(--white); }
 </head>
 <body>
 
-<header class="site-head">
-  <div class="wrap">
-    <a class="head-title" id="logoLink" href="#"></a>
-    <nav class="head-nav" id="headNav" aria-label="Hlavní"></nav>
-  </div>
-</header>
 
 <main id="app">
   <div class="page-state" id="loading"><span class="spinner" style="width:34px;height:34px;color:var(--brand)"></span></div>
@@ -194,8 +185,6 @@ body { background: var(--white); }
     now = new Date(site.now);
     const c = site.client;
     UI.applyBrand(c);
-    $('#logoLink').href = API.urls.client(c);
-    $('#logoLink').textContent = site.event ? site.event.name : c.name;
     $('#footText').innerHTML = `Akci pořádá <b style="color:#fff">${esc(P.AGENCY)}</b>${c.contact ? ` · Dotazy: <a href="mailto:${esc(c.contact)}">${esc(c.contact)}</a>` : ''}`;
     $('#foot').hidden = false;
     if (site.event) renderEvent(site.event); else renderClient();
@@ -212,7 +201,6 @@ body { background: var(--white); }
   function renderClient() {
     const c = site.client;
     document.title = c.name + ' · Akce pro zaměstnance';
-    $('#headNav').innerHTML = '';
     $('#app').innerHTML = `
       <section class="client-hero">
         <div class="wrap">
@@ -247,9 +235,7 @@ body { background: var(--white); }
     const d = daysTo(ev.date);
     document.title = ev.name + ' · Registrace';
     if (site.events.length > 1) {
-      $('#headNav').innerHTML = `<a class="back" href="${esc(API.urls.client(c))}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Všechny akce</a>`;
     }
-    if (regOpen(ev)) $('#headNav').insertAdjacentHTML('beforeend', '<a class="btn btn-primary" href="#registrace">Registrovat se</a>');
 
     const parts = F.day(ev.date).split('. ');
     $('#app').innerHTML = `
