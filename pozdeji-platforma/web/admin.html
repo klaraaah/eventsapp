@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EventDesk · Administrace</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F1222">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="Navigace">
+    <a class="brand" href="#/"><i>E</i><span><b id="pfName">EventDesk</b><small>Event management</small></span></a>
+    <div class="ws"><span class="av" id="wsAv">Y</span><span><b id="wsName">Yashica</b><small>Eventová agentura</small></span></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <a class="btn btn-accent" href="#/nova-akce"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Nová akce</a>
+      <div class="legend" id="legend" hidden>
+        <b>Demo režim</b>
+        Fiktivní data jen v tomto prohlížeči.
+        <div><span class="tag real">Funguje</span> skutečná funkce</div>
+        <div><span class="tag sim">Simulace</span> jen ukázka</div>
+        <button type="button" id="resetDemo">Obnovit výchozí demo data</button>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="top">
+      <button class="btn btn-ghost btn-icon menu-btn" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div class="crumbs" id="crumbs"></div>
+      <div class="top-r" id="topR"></div>
+    </header>
+    <main class="view" id="view"><div class="loading"><span class="spinner"></span></div></main>
+  </div>
+</div>
+<div id="layer"></div>
+
+<script src="vendor/qrcode.min.js"></script>
+<script src="config.js"></script>
+<script src="js/demo-data.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/emails.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
