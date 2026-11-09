@@ -142,7 +142,6 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
           <dl class="t-rows">
             <div><dt>Stav</dt><dd id="tState"></dd></div>
             <div><dt>Místo</dt><dd id="tVenue"></dd></div>
-            <div id="tGuestsRow"><dt>Doprovod</dt><dd id="tGuests"></dd></div>
             <div><dt>Strava</dt><dd id="tDiet"></dd></div>
             <div id="tTransportRow"><dt>Doprava</dt><dd id="tTransport"></dd></div>
           </dl>
@@ -175,7 +174,6 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
             <label class="field"><span class="f-label">Alergie <small>(nepovinné)</small></span><input class="input" name="allergies" maxlength="200"></label>
             <label class="check" id="eHealth"><input type="checkbox" name="healthConsent"><span>Souhlasím se zpracováním údaje o alergii (zdravotní údaj) výhradně pro přípravu jídla na této akci.</span></label>
             <fieldset class="fs" id="eTransportFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprava</legend><div class="chips" id="eTransport"></div></fieldset>
-            <fieldset class="fs" id="eGuestFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprovod</legend><div class="chips" id="eGuests"></div><div id="eGuestRows" style="display:grid;gap:16px"></div></fieldset>
             <div class="edit-foot">
               <button class="btn btn-primary" type="submit" id="saveBtn">Uložit změny</button>
               <span class="saved" id="saved" role="status">✓ Uloženo</span>
@@ -255,9 +253,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     $('#tWhen').textContent = F.long(ev.date) + (ev.time ? ' · ' + ev.time : '') + (ev.city ? ' · ' + ev.city : '');
     $('#tName').textContent = t.name;
     $('#tVenue').textContent = ev.venue || 'Upřesníme';
-    $('#tGuestsRow').hidden = !ev.registration.maxGuests;
-    $('#tGuests').textContent = t.guests ? '+' + t.guests + (t.guestNames && t.guestNames[0] && !/^Doprovod \d+$/.test(t.guestNames[0]) ? ' (' + t.guestNames.join(', ') + ')' : '') : 'bez doprovodu';
-    $('#tDiet').textContent = t.diet + (t.guests ? ' · doprovod: ' + (t.guestDiets || []).join(', ') : '');
+    $('#tDiet').textContent = t.diet;
     $('#tTransportRow').hidden = !(ev.registration.transport || []).length;
     $('#tTransport').textContent = t.transport || '—';
     $('#tState').innerHTML = t.arrivedAt ? `<span class="badge in">Na místě od ${esc(F.time(t.arrivedAt))}</span>`
@@ -317,11 +313,11 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     f.elements.healthConsent.checked = !!t.allergies;
     if ((r.transport || []).length) $('#eTransport').innerHTML = chips('transport', r.transport, t.transport || r.transport[0]);
     else $('#eTransportFs').hidden = true;
-    if (r.maxGuests) {
+    if (false) { // doprovod se neregistruje
       $('#eGuests').innerHTML = Array.from({ length: r.maxGuests + 1 }, (_, i) =>
         `<label class="chip"><input type="radio" name="guests" value="${i}" ${i === t.guests ? 'checked' : ''}><span>${i === 0 ? 'Bez doprovodu' : '+' + i}</span></label>`).join('');
       drawGuests(t.guestNames || [], t.guestDiets || []);
-    } else $('#eGuestFs').hidden = true;
+    }
   }
   function drawGuests(names, diets) {
     const n = +(($('#editForm input[name=guests]:checked') || {}).value || 0);
@@ -331,7 +327,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
         <label class="field"><span class="f-label">Strava doprovodu</span><select class="select">${ev.registration.diets.map((x) => `<option ${x === diets[i] ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></label>
       </div>`).join('');
   }
-  $('#eGuests').addEventListener('change', () => {
+  if ($('#eGuests')) $('#eGuests').addEventListener('change', () => {
     const g = $$('#eGuestRows .g');
     drawGuests(g.map((x) => $('input', x).value), g.map((x) => $('select', x).value));
   });

@@ -429,7 +429,7 @@ body { background: var(--bg); overscroll-behavior: none; }
       body = `
         <div class="r-name">${esc(p.name)}</div>
         <div class="r-dept">${esc(p.dept || '')}</div>
-        ${((evOf(evId) || {}).maxGuests || p.guests) ? `<div class="r-guests">
+        ${p.guests ? `<div class="r-guests">
           <div class="k">Doprovod<small>nahlášeno: ${p.guests}</small></div>
           <div class="stepper">
             <button type="button" data-d="-1" aria-label="Ubrat doprovod">−</button>

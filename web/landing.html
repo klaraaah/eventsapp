@@ -371,9 +371,6 @@ body { background: var(--white); }
           <input class="input" name="allergies" placeholder="Např. ořechy, celer" maxlength="200"></label>
         <label class="check" id="healthRow" hidden><input type="checkbox" name="healthConsent"><span>Souhlasím se zpracováním údaje o alergii (zdravotní údaj) výhradně pro přípravu jídla na této akci. Bez souhlasu alergii prosím nevyplňujte.</span></label>
         ${(r.transport || []).length ? `<fieldset class="fs"><legend class="f-label">Doprava</legend><div class="chips">${chips('transport', r.transport)}</div></fieldset>` : ''}
-        ${r.maxGuests ? `<fieldset class="fs"><legend class="f-label">Doprovod</legend><div class="chips" id="guestChips">${
-          Array.from({ length: r.maxGuests + 1 }, (_, i) => `<label class="chip"><input type="radio" name="guests" value="${i}" ${i === 0 ? 'checked' : ''}><span>${i === 0 ? 'Bez doprovodu' : '+' + i + (i === 1 ? ' osoba' : ' osoby')}</span></label>`).join('')
-        }</div><div id="guestRows" class="guest-box" hidden></div></fieldset>` : ''}
         <div class="hp" aria-hidden="true"><label>Nevyplňujte<input name="website" tabindex="-1" autocomplete="off"></label></div>
         <div class="form-err" id="formErr" role="alert" hidden></div>
         <div class="form-foot">
@@ -442,7 +439,7 @@ body { background: var(--white); }
         website: f.website.value, consent: f.consent.checked, healthConsent: f.healthConsent.checked,
         diet: ($('input[name=diet]:checked', form) || {}).value,
         transport: ($('input[name=transport]:checked', form) || {}).value || '',
-        guests: g.length, guestNames: g.map((x) => $('input', x).value.trim()), guestDiets: g.map((x) => $('select', x).value),
+        guests: 0, guestNames: [], guestDiets: [], // doprovod se neregistruje
       };
       const btn = $('#submitBtn'), label = btn.innerHTML;
       btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Odesílám…';
