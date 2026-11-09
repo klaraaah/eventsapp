@@ -30,7 +30,7 @@
 })();
 </script>
 <title>Registrace</title>
-<meta name="theme-color" content="#12112A">
+<meta name="theme-color" content="#1E1F2E">
 <meta name="robots" content="noindex">
 <meta name="referrer" content="no-referrer">
 <link rel="stylesheet" href="styles.css">
@@ -45,18 +45,18 @@ body { background: var(--gray); }
 
 /* ---------- HERO (tmavý, světelné přechody v barvách pořadatele) ---------- */
 .hero { position: relative; overflow: hidden; background: var(--dark); color: #fff; isolation: isolate; }
-.hero::before, .hero::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; filter: blur(80px); opacity: .55; pointer-events: none; }
-.hero::before { width: 620px; height: 620px; left: -160px; top: -260px; background: #5B4BFF; }
-.hero::after { width: 520px; height: 520px; right: -120px; bottom: -280px; background: #B84BFF; opacity: .4; }
+.hero::before, .hero::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; filter: blur(90px); opacity: .32; pointer-events: none; }
+.hero::before { width: 620px; height: 620px; left: -160px; top: -260px; background: #F15A22; }
+.hero::after { width: 520px; height: 520px; right: -120px; bottom: -280px; background: #F15A22; opacity: .18; }
 .hero .grain { position: absolute; inset: 0; z-index: -1; background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px); background-size: 22px 22px; mask-image: linear-gradient(180deg, #000 0%, transparent 85%); -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 85%); }
 .hero .wrap { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(32px, 5vw, 72px); align-items: center; padding-top: clamp(56px, 9vw, 112px); padding-bottom: clamp(64px, 10vw, 128px); }
 .pill { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,.86); }
 .pill i { width: 7px; height: 7px; border-radius: 50%; background: #7CF2B5; box-shadow: 0 0 0 4px rgba(124,242,181,.18); }
 .hero h1 { font: 650 clamp(42px, 6vw, 80px)/1 var(--sans); letter-spacing: -.04em; margin: 22px 0 0; }
-.hero h1 span { background: linear-gradient(120deg, #A79BFF 0%, #E3A6FF 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero h1 span { background: linear-gradient(120deg, #FF9C6E 0%, #FFC2A1 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .meta { display: flex; flex-wrap: wrap; gap: 10px; margin: 32px 0 36px; }
 .meta div { display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--r-sm); background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); font-size: 15px; font-weight: 500; }
-.meta svg { width: 18px; height: 18px; color: #A79BFF; flex: none; }
+.meta svg { width: 18px; height: 18px; color: #FF9C6E; flex: none; }
 .meta small { display: block; font-size: 11.5px; color: rgba(255,255,255,.55); font-weight: 500; letter-spacing: .02em; }
 .meta .tbd { color: rgba(255,255,255,.6); }
 .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; }
@@ -133,7 +133,7 @@ body { background: var(--gray); }
 .done p { color: var(--muted); font-size: 16.5px; margin: 0 0 8px; max-width: 44ch; }
 .done .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .done-ticket { background: var(--dark); color: #fff; padding: 26px; display: grid; align-content: start; gap: 14px; position: relative; overflow: hidden; }
-.done-ticket::before { content: ""; position: absolute; width: 260px; height: 260px; right: -120px; top: -120px; border-radius: 50%; background: #5B4BFF; filter: blur(60px); opacity: .5; }
+.done-ticket::before { content: ""; position: absolute; width: 260px; height: 260px; right: -120px; top: -120px; border-radius: 50%; background: #F15A22; filter: blur(60px); opacity: .5; }
 .done-ticket > * { position: relative; }
 .done-ticket .k { font: 700 11px/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.55); }
 .done-ticket .qr { background: #fff; padding: 10px; border-radius: 14px; }
