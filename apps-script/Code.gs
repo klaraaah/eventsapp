@@ -27,7 +27,7 @@
 // ============================================================
 const CONFIG = {
   AGENCY: 'Yashica',
-  WEB_URL: 'https://VASE-ADRESA.cz/',      // kde běží web, s lomítkem na konci
+  WEB_URL: 'https://klaraaah.github.io/eventsapp/', // kde běží web, s lomítkem na konci
   PRETTY_URLS: true,                       // /cez/dukovany (vyžaduje přesměrování na hostingu, viz web/_redirects)
 
   CLIENTS: [
