@@ -25,7 +25,7 @@
   ];
 
   const baseRegistration = {
-    maxGuests: 1,
+    maxGuests: 0,              // bez doprovodu (+1)
     diets: DIETS,
     transport: ['Vlastní doprava', 'Svozový autobus'],
     emailDomains: [],          // [] = jakýkoliv e-mail; naostro typicky firemní domény
@@ -119,7 +119,7 @@
       // registrace: víc lidí v prvních dnech po rozeslání pozvánky
       const reg = new Date(from + Math.pow(r(), 1.9) * (to - from));
       reg.setHours(7 + Math.floor(r() * 13), Math.floor(r() * 60), 0, 0);
-      const guests = r() < 0.31 ? 1 : 0;
+      const guests = ev.registration.maxGuests && r() < 0.31 ? 1 : 0;
       const diet = weighted([['Klasická', 0.74], ['Vegetariánská', 0.12], ['Veganská', 0.04], ['Bez lepku', 0.05], ['Bez laktózy', 0.05]]);
       const x = r();
       const attendance = ev.automations.confirm.confirmsAttendance
@@ -146,5 +146,5 @@
     return out;
   }
 
-  window.DEMO_SEED = { version: 4, clients, events, generatePeople };
+  window.DEMO_SEED = { version: 5, clients, events, generatePeople };
 })();
