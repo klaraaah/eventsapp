@@ -464,7 +464,6 @@ body { background: var(--white); }
   }
 
   function success(ev, res, p) {
-    const first = p.name.split(' ')[0];
     const ticketUrl = res.token ? API.urls.ticket(res.token) : '';
     const confirmed = ev.automations.confirm.confirmsAttendance;
     const done = $('#done');
@@ -472,7 +471,7 @@ body { background: var(--white); }
     done.innerHTML = `
       <div class="done-main">
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div>
-        <h3>Hotovo, ${esc(first)}</h3>
+        <h3>Registrace je hotová</h3>
         <p>QR vstupenku posíláme na <b>${esc(p.email)}</b>. Pokud jste už registrovaní, přijde vám znovu.</p>
         <p>${confirmed ? 'Vaše účast je potvrzená.' : 'O potvrzení účasti vás požádáme e-mailem.'}</p>
         <div class="actions">
