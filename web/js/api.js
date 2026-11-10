@@ -443,10 +443,26 @@
 
   const adapter = DEMO ? DemoAdapter : RemoteAdapter;
 
+  /** Doplní texty z PLATFORM.OVERRIDES (config.js) do odpovědi serveru. */
+  function applyOverrides(res) {
+    const o = (window.PLATFORM || {}).OVERRIDES;
+    if (!o || !res || typeof res !== 'object') return res;
+    const ev = (e) => {
+      const x = e && (o.events || {})[e.id];
+      if (!x) return;
+      Object.keys(x).forEach((k) => { if (k !== 'registration') e[k] = x[k]; });
+      if (x.registration && e.registration) Object.assign(e.registration, x.registration);
+    };
+    const cl = (c) => { const x = c && (o.clients || {})[c.id]; if (x) Object.assign(c, x); };
+    cl(res.client); ev(res.event); (res.events || []).forEach(ev);
+    if (res.privacy && o.privacy) Object.assign(res.privacy, o.privacy);
+    return res;
+  }
+
   window.API = {
     demo: DEMO,
     YES, NO, PENDING,
-    call: (action, data) => adapter.call(action, data),
+    call: (action, data) => adapter.call(action, data).then(applyOverrides),
     parseToken, parseQr, qrText, fmt, dayDate, automationAt, urls,
     demoLastToken() { return DEMO ? load().last : ''; },
     resetDemo() { memory = null; try { localStorage.removeItem(KEY); } catch (e) {} },
