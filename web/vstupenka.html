@@ -247,7 +247,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 
   function render() {
     document.title = 'Moje vstupenka · ' + ev.name;
-    $('#hello').textContent = t.name.split(' ')[0] + ', tady je vaše vstupenka';
+    $('#hello').textContent = 'Tady je Vaše vstupenka'; // bez oslovení jménem (nedá se spolehlivě skloňovat)
     $('#tSite').textContent = ev.audience || client.name;
     $('#tCity').textContent = ev.name;
     $('#tWhen').textContent = F.long(ev.date) + (ev.time ? ' · ' + ev.time : '') + (ev.city ? ' · ' + ev.city : '');
