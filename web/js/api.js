@@ -135,8 +135,12 @@
     });
   }
 
-  function pickDiet(ev, x) { const d = ev.registration.diets; return d.indexOf(x) >= 0 ? x : d[0]; }
-  function pickTransport(ev, x) { const t = ev.registration.transport || []; return t.indexOf(x) >= 0 ? x : (t[0] || ''); }
+  function pickDiet(ev, x) { const d = ev.registration.diets, want = String(x || '').split(',').map((y) => y.trim()); const out = d.filter((y) => want.indexOf(y) >= 0); return out.length ? out.join(', ') : d[0]; }
+  function pickTransport(ev, x) {
+    const r = ev.registration, t = r.transport || [], v = String(x || ''), pre = r.busOption + ' – ';
+    if (r.busOption && (r.busRoutes || []).indexOf(v.slice(pre.length)) >= 0 && v.indexOf(pre) === 0) return v;
+    return t.indexOf(v) >= 0 ? v : (t[0] || '');
+  }
   function details(ev, d) {
     const max = ev.registration.maxGuests || 0;
     const guests = Math.max(0, Math.min(max, parseInt(d.guests, 10) || 0));
@@ -163,7 +167,7 @@
       st.registered++; st.persons += n; st.guests += p.guests;
       if (p.attendance === YES) {
         st.yes += n; st.yesPeople++;
-        st.diets[p.diet] = (st.diets[p.diet] || 0) + 1;
+        String(p.diet).split(', ').forEach((x) => (st.diets[x] = (st.diets[x] || 0) + 1));
         p.guestDiets.forEach((g) => (st.diets[g] = (st.diets[g] || 0) + 1));
         if (p.transport) st.transport[p.transport] = (st.transport[p.transport] || 0) + n;
         if (p.allergies) st.allergies++;

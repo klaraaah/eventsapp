@@ -45,7 +45,8 @@ body { background: var(--white); }
 .hero { background: var(--gray); overflow: hidden; }
 .hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; min-height: min(640px, 100vh); }
 .hero-copy { display: flex; flex-direction: column; justify-content: center; padding: 64px 48px 64px 0; }
-.hero h1 { font: 600 clamp(44px, 6.4vw, 84px)/.98 var(--sans); letter-spacing: -.035em; margin: 22px 0 24px; text-wrap: balance; }
+.hero h1 { font: 600 clamp(34px, 4.6vw, 62px)/1.02 var(--sans); letter-spacing: -.03em; margin: 22px 0 24px; text-wrap: balance; overflow-wrap: anywhere; }
+.client-logo { display: block; width: clamp(200px, 26vw, 300px); height: auto; margin: 0 0 32px; }
 .hero h1 em { font-style: normal; color: var(--brand); }
 .hero .lead { font-size: clamp(17px, 1.6vw, 20px); color: var(--muted); max-width: 34ch; margin: 0 0 36px; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -272,15 +273,17 @@ body { background: var(--white); }
     }
 
     const nm = String(ev.name), ci = nm.lastIndexOf(',');
-    const title = ci > 0 ? esc(nm.slice(0, ci + 1)) + ' <em>' + esc(nm.slice(ci + 1).trim()) + '</em>' : esc(nm);
+    const title = ci > 0 ? esc(nm.slice(0, ci)) + ' <em>' + esc(nm.slice(ci + 1).trim()) + '</em>' : esc(nm);
+    const logo = (P.CLIENT_LOGOS || {})[c.slug];
     const year = API.dayDate(ev.date).getFullYear();
     $('#app').innerHTML = `
       <section class="hero">
         <div class="wrap">
           <div class="hero-copy">
+            ${logo ? `<img class="client-logo" src="${esc(logo)}" alt="${esc(c.name)}" width="900" height="177">` : ''}
             <span class="label">Pozvánka pro zaměstnance</span>
             <h1>${title}</h1>
-            <p class="lead">Děkujeme za celý rok práce. Přijďte ho s&nbsp;námi uzavřít.</p>
+            <p class="lead">Děkujeme za celý rok práce. Přijďte ho s&nbsp;námi uzavřít a&nbsp;oslavit.</p>
             <div class="hero-cta">
               ${regOpen(ev) ? `<a class="btn btn-primary" href="#registrace">Registrovat se ${ARROW}</a>` : ''}
               <a class="btn btn-outline" href="#akce">Informace o akci</a>
@@ -345,7 +348,7 @@ body { background: var(--white); }
           <aside class="reg-aside reveal">
             <span class="label">Registrace</span>
             <h2>Registrujte se</h2>
-            <p>${esc(ev.name)} · ${F.date(ev.date)}</p>
+            <p>${esc(ev.name)}, ${F.date(ev.date)}</p>
           </aside>
           <div id="regBox"></div>
         </div>
@@ -356,7 +359,8 @@ body { background: var(--white); }
       return;
     }
     const doms = r.emailDomains || [];
-    const chips = (name, list) => list.map((x, i) => `<label class="chip"><input type="radio" name="${name}" value="${esc(x)}" ${i === 0 ? 'checked' : ''}><span>${esc(x)}</span></label>`).join('');
+    const chips = (name, list, type = 'radio', checkFirst = true) => list.map((x, i) => `<label class="chip"><input type="${type}" name="${name}" value="${esc(x)}" ${checkFirst && i === 0 ? 'checked' : ''}><span>${esc(x)}</span></label>`).join('');
+    const routes = r.busOption && (r.busRoutes || []).length ? r.busRoutes : [];
     $('#regBox').innerHTML = `
       <form class="form" id="regForm" novalidate>
         <div class="ev-lock"><div><b>${esc(ev.name)}</b><span>${F.long(ev.date)} · ${esc(ev.city || '')}</span></div></div>
@@ -366,11 +370,12 @@ body { background: var(--white); }
           <label class="field"><span class="f-label">${doms.length ? 'Firemní e-mail' : 'E-mail'}</span>
             <input class="input" name="email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="${doms.length ? 'jmeno.prijmeni@' + esc(doms[0]) : 'jmeno.prijmeni@firma.cz'}" maxlength="120" required></label>
         </div>
-        <fieldset class="fs"><legend class="f-label">Strava</legend><div class="chips">${chips('diet', r.diets)}</div></fieldset>
+        <fieldset class="fs"><legend class="f-label">Strava <small>(můžete zvolit více možností)</small></legend><div class="chips">${chips('diet', r.diets, 'checkbox')}</div></fieldset>
         <label class="field"><span class="f-label">Alergie nebo intolerance <small>(nepovinné)</small></span>
           <input class="input" name="allergies" placeholder="Např. ořechy, celer" maxlength="200"></label>
         <label class="check" id="healthRow" hidden><input type="checkbox" name="healthConsent"><span>Souhlasím se zpracováním údaje o alergii (zdravotní údaj) výhradně pro přípravu jídla na této akci. Bez souhlasu alergii prosím nevyplňujte.</span></label>
-        ${(r.transport || []).length ? `<fieldset class="fs"><legend class="f-label">Doprava</legend><div class="chips">${chips('transport', r.transport)}</div></fieldset>` : ''}
+        ${(r.transport || []).length ? `<fieldset class="fs"><legend class="f-label">Doprava</legend><div class="chips">${chips('transport', r.transport)}</div>
+          ${routes.length ? `<div class="bus-routes" id="busRoutes" hidden><span class="f-label">Směr svozového autobusu</span><div class="chips">${chips('busRoute', routes, 'radio', false)}</div></div>` : ''}</fieldset>` : ''}
         <div class="hp" aria-hidden="true"><label>Nevyplňujte<input name="website" tabindex="-1" autocomplete="off"></label></div>
         <div class="form-err" id="formErr" role="alert" hidden></div>
         <div class="form-foot">
@@ -386,15 +391,15 @@ body { background: var(--white); }
   /** Informace o zpracování osobních údajů (GDPR) – hodnoty z CONFIG.PRIVACY v Code.gs. */
   function privacyHtml(ev) {
     const pv = (site && site.privacy) || {};
-    const days = pv.retentionDays || 30;
+    const days = pv.retentionDays || 10;
     const row = (k, v) => v ? `<div><dt>${k}</dt><dd>${v}</dd></div>` : '';
     return `<details class="privacy"><summary>Jak s údaji nakládáme</summary><dl>
       ${row('Správce', esc(pv.controller))}
-      ${row('Zpracovatel', esc(pv.processor || P.AGENCY + ' (pořadatel akce)'))}
+      ${row('Zpracovatel', esc(pv.processor || P.AGENCY))}
       ${row('Účel', 'Registrace na akci ' + esc(ev.name) + ', zaslání vstupenky a připomínek, příprava jídla a dopravy, odbavení u vstupu.')}
       ${row('Jaké údaje', 'Jméno, e-mail, strava, doprava, čas příchodu. Alergie jen s vaším výslovným souhlasem (zdravotní údaj).')}
       ${row('Uložení', 'V Google tabulce pořadatele, přístup mají jen organizátoři. Údaje nikomu dalšímu nepředáváme.')}
-      ${row('Jak dlouho', 'Do ' + days + ' dní po akci údaje smažeme.')}
+      ${row('Jak dlouho', 'Do ' + days + ' ' + (days === 1 ? 'dne' : 'dnů') + ' po akci údaje smažeme.')}
       ${row('Vaše práva', 'Přístup, oprava, výmaz a odvolání souhlasu' + (pv.contact ? ': napište na <a href="mailto:' + esc(pv.contact) + '">' + esc(pv.contact) + '</a>' : ' – kontaktujte pořadatele akce') + '. Účast můžete kdykoliv zrušit přes odkaz v e-mailu.')}
     </dl></details>`;
   }
@@ -421,6 +426,9 @@ body { background: var(--white); }
       else $('#formErr').scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
     form.addEventListener('input', (e) => { if (e.target.hasAttribute('aria-invalid')) e.target.removeAttribute('aria-invalid'); });
+    const bus = $('#busRoutes');
+    const busOn = () => !!bus && (($('input[name=transport]:checked', form) || {}).value === r.busOption);
+    if (bus) form.addEventListener('change', (e) => { if (e.target.name === 'transport') bus.hidden = !busOn(); });
     form.elements.allergies.addEventListener('input', () => { $('#healthRow').hidden = !form.elements.allergies.value.trim(); });
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -433,12 +441,16 @@ body { background: var(--white); }
       if (doms.length && !doms.some((x) => email.endsWith('@' + x))) return showErr('Použijte prosím firemní e-mail (@' + doms.join(', @') + ').', f.email);
       if (!f.consent.checked) return showErr('Potvrďte prosím souhlas se zpracováním údajů.');
       if (f.allergies.value.trim() && !f.healthConsent.checked) return showErr('U alergie potvrďte prosím souhlas se zpracováním zdravotního údaje, nebo pole nechte prázdné.', f.healthConsent);
-      const g = $$('#guestRows .g');
+      const diets = $$('input[name=diet]:checked', form).map((x) => x.value);
+      if (!diets.length) return showErr('Vyberte prosím stravu.', $('input[name=diet]', form));
+      const route = ($('input[name=busRoute]:checked', form) || {}).value;
+      if (busOn() && !route) return showErr('Vyberte prosím směr svozového autobusu.', $('input[name=busRoute]', form));
+      const transport = ($('input[name=transport]:checked', form) || {}).value || '';
       const payload = {
         event: ev.id, name, email, allergies: f.allergies.value.trim(),
         website: f.website.value, consent: f.consent.checked, healthConsent: f.healthConsent.checked,
-        diet: ($('input[name=diet]:checked', form) || {}).value,
-        transport: ($('input[name=transport]:checked', form) || {}).value || '',
+        diet: diets.join(', '), diets,
+        transport: busOn() ? transport + ' – ' + route : transport,
         guests: 0, guestNames: [], guestDiets: [], // doprovod se neregistruje
       };
       const btn = $('#submitBtn'), label = btn.innerHTML;

@@ -125,6 +125,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .chip input:checked + span { background: var(--dark); border-color: var(--dark); color: var(--white); }
 .chip input:focus-visible + span { outline: 3px solid var(--brand); outline-offset: 2px; }
 
+.bus-routes { display: grid; gap: 12px; margin-top: 4px; padding: 16px; background: var(--gray); border-left: 3px solid var(--brand); }
 .check { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--muted); cursor: pointer; }
 .check input { appearance: none; flex: none; width: 22px; height: 22px; margin: 1px 0 0; border: 1px solid var(--muted-2); background: var(--white); cursor: pointer; display: grid; place-items: center; }
 .check input:checked { background: var(--brand); border-color: var(--brand); }

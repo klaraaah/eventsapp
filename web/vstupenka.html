@@ -134,7 +134,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
         </div>
         <div class="t-qr">
           <div class="qr" id="qr" role="img" aria-label="QR kód vstupenky"></div>
-          <small>U vstupu ukažte tento kód. Kód ani odkaz na tuto stránku nikomu nepřeposílejte.</small>
+          <small>U vstupu ukažte tento kód. Kód ani odkaz na tuto stránku nikomu nepřeposílejte ani neukazujte!</small>
         </div>
         <div class="t-cut" aria-hidden="true"></div>
         <div class="t-body">
@@ -170,10 +170,10 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
           <h3 id="editTitle">Strava a doprava</h3>
           <p>Změnilo se něco? Upravte to tady, ať víme, co nachystat.</p>
           <form class="edit" id="editForm" novalidate>
-            <fieldset class="fs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Strava</legend><div class="chips" id="eDiet"></div></fieldset>
+            <fieldset class="fs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Strava <small>(můžete zvolit více možností)</small></legend><div class="chips" id="eDiet"></div></fieldset>
             <label class="field"><span class="f-label">Alergie <small>(nepovinné)</small></span><input class="input" name="allergies" maxlength="200"></label>
             <label class="check" id="eHealth"><input type="checkbox" name="healthConsent"><span>Souhlasím se zpracováním údaje o alergii (zdravotní údaj) výhradně pro přípravu jídla na této akci.</span></label>
-            <fieldset class="fs" id="eTransportFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprava</legend><div class="chips" id="eTransport"></div></fieldset>
+            <fieldset class="fs" id="eTransportFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprava</legend><div class="chips" id="eTransport"></div><div id="eBus" class="bus-routes" hidden><span class="f-label">Směr svozového autobusu</span><div class="chips" id="eBusRoutes"></div></div></fieldset>
             <div class="edit-foot">
               <button class="btn btn-primary" type="submit" id="saveBtn">Uložit změny</button>
               <span class="saved" id="saved" role="status">✓ Uloženo</span>
@@ -302,16 +302,24 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 
   // ---------- úpravy ----------
   let filledFor = '';
-  const chips = (name, list, sel) => list.map((x) => `<label class="chip"><input type="radio" name="${name}" value="${esc(x)}" ${x === sel ? 'checked' : ''}><span>${esc(x)}</span></label>`).join('');
+  const chips = (name, list, sel, type = 'radio') => list.map((x) => `<label class="chip"><input type="${type}" name="${name}" value="${esc(x)}" ${[].concat(sel).includes(x) ? 'checked' : ''}><span>${esc(x)}</span></label>`).join('');
+  const routesOf = (r) => r.busOption && (r.busRoutes || []).length ? r.busRoutes : [];
+  const busOn = () => (($('#editForm input[name=transport]:checked') || {}).value === ev.registration.busOption) && routesOf(ev.registration).length > 0;
+  $('#editForm').addEventListener('change', (e) => { if (e.target.name === 'transport') $('#eBus').hidden = !busOn(); });
   function fillEdit() {
     const r = ev.registration;
     const key = JSON.stringify([t.diet, t.allergies, t.transport, t.guests, t.guestNames, t.guestDiets]);
     if (filledFor === key) return; filledFor = key;
     const f = $('#editForm');
-    $('#eDiet').innerHTML = chips('diet', r.diets, t.diet);
+    $('#eDiet').innerHTML = chips('diet', r.diets, String(t.diet || '').split(', '), 'checkbox');
     f.elements.allergies.value = t.allergies || '';
     f.elements.healthConsent.checked = !!t.allergies;
-    if ((r.transport || []).length) $('#eTransport').innerHTML = chips('transport', r.transport, t.transport || r.transport[0]);
+    if ((r.transport || []).length) {
+      const cur = t.transport || r.transport[0], pre = r.busOption + ' – ', onBus = !!r.busOption && cur.indexOf(pre) === 0;
+      $('#eTransport').innerHTML = chips('transport', r.transport, onBus ? r.busOption : cur);
+      $('#eBusRoutes').innerHTML = chips('busRoute', routesOf(r), onBus ? cur.slice(pre.length) : null);
+      $('#eBus').hidden = !busOn();
+    }
     else $('#eTransportFs').hidden = true;
     if (false) { // doprovod se neregistruje
       $('#eGuests').innerHTML = Array.from({ length: r.maxGuests + 1 }, (_, i) =>
@@ -334,12 +342,17 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
   $('#editForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = e.target, g = $$('#eGuestRows .g');
+    const diets = $$('input[name=diet]:checked', f).map((x) => x.value);
+    if (!diets.length) return UI.toast('Vyberte prosím stravu.', 'err');
+    const route = ($('input[name=busRoute]:checked', f) || {}).value;
+    if (busOn() && !route) return UI.toast('Vyberte prosím směr svozového autobusu.', 'err');
+    const tr = ($('input[name=transport]:checked', f) || {}).value || '';
     const btn = $('#saveBtn'); btn.disabled = true;
     try {
       apply(await API.call('rsvp', {
         token, attend: null,
-        diet: ($('input[name=diet]:checked', f) || {}).value,
-        transport: ($('input[name=transport]:checked', f) || {}).value || '',
+        diet: diets.join(', '), diets,
+        transport: busOn() ? tr + ' – ' + route : tr,
         allergies: f.elements.allergies.value, healthConsent: f.elements.healthConsent.checked,
         guests: g.length, guestNames: g.map((x) => $('input', x).value), guestDiets: g.map((x) => $('select', x).value),
       }));

@@ -7,7 +7,8 @@ window.PLATFORM = {
   API_URL: 'https://script.google.com/macros/s/AKfycbx1PoTbm5A-cmvBVLDtSeEyaBRydce897vGPl-xXA-uxUf8VaheyavuDQwpVoCFGFmI/exec',
 
   NAME: 'EventDesk',            // pracovní název platformy
-  AGENCY: 'Yashica',            // pořadatel akce (zobrazuje se na webu)
+  AGENCY: 'YASHICA EVENTS a.s.', // pořadatel akce (zobrazuje se na webu)
+  CLIENT_LOGOS: { cez: 'img/cez-energoservis.png' }, // logo klienta v úvodu stránky akce
   DEMO_SCANNER_PIN: '2412',     // jen pro demo bez API_URL (naostro chrání skener klíč v Apps Scriptu)
 
   // Čisté adresy /klient/akce (např. /cez/dukovany). Vyžadují přesměrování na hostingu

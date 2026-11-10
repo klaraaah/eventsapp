@@ -11,7 +11,7 @@
     {
       id: 'cez-energoservis',
       slug: 'cez',               // adresa: /cez
-      name: 'ČEZ ENERGOSERVIS',
+      name: 'ČEZ ENERGOSERVIS spol. s r.o.',
       web: 'https://www.cezenergoservis.cz',
       logo: 'img/clients/cez/logo.svg',
       logoNegative: 'img/clients/cez/logo-negative.svg',
@@ -28,6 +28,8 @@
     maxGuests: 0,              // bez doprovodu (+1)
     diets: DIETS,
     transport: ['Vlastní doprava', 'Svozový autobus'],
+    busOption: 'Svozový autobus',
+    busRoutes: ['směr Třebíč', 'směr Náměšť nad Oslavou', 'směr Moravský Krumlov', 'směr Jaroměřice nad Rokytnou'],
     emailDomains: [],          // [] = jakýkoliv e-mail; naostro typicky firemní domény
     deadline: null,            // termín uzávěrky zatím nestanoven
   };
@@ -37,12 +39,12 @@
       id: 'cez-dukovany',
       slug: 'dukovany',          // adresa: /cez/dukovany
       clientId: 'cez-energoservis',
-      name: 'ČEZ Energoservis, Dukovany',
-      audience: 'Zaměstnanci Dukovan',
+      name: 'ČEZ ENERGOSERVIS spol. s r.o., Dukovany',
+      audience: 'Pracovníci na JE Dukovany',
       city: 'Rouchovany',
-      venue: null,               // nepotvrzeno
+      venue: 'Penzion Lihovar Rouchovany 197',
       date: '2026-12-04',
-      time: null,                // nepotvrzeno
+      time: '14:00 – 00:00 hod.',
       invited: 600,              // přibližný počet pozvaných
       status: 'published',
       createdAt: '2026-10-19T10:00:00',
@@ -58,8 +60,8 @@
       id: 'cez-temelin',
       slug: 'temelin',           // adresa: /cez/temelin
       clientId: 'cez-energoservis',
-      name: 'ČEZ Energoservis, Temelín',
-      audience: 'Zaměstnanci Temelína',
+      name: 'ČEZ ENERGOSERVIS spol. s r.o., Temelín',
+      audience: 'Pracovníci na JE Temelín',
       city: 'České Budějovice',
       venue: null,
       date: '2027-01-15',
@@ -147,7 +149,7 @@
   }
 
   // stejná struktura jako CONFIG.PRIVACY v Code.gs (v demu nevyplněno)
-  const privacy = { controller: '', processor: '', contact: '', retentionDays: 30 };
+  const privacy = { controller: '', processor: 'YASHICA EVENTS a.s.', contact: '', retentionDays: 10 };
 
-  window.DEMO_SEED = { version: 5, clients, events, privacy, generatePeople };
+  window.DEMO_SEED = { version: 6, clients, events, privacy, generatePeople };
 })();
