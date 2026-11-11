@@ -123,6 +123,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
       <h1 id="hello"></h1>
     </div>
     <div id="banner"></div>
+    <div class="notice" id="deadlineNote" role="note" hidden></div>
 
     <div class="grid">
       <!-- vstupenka -->
@@ -143,7 +144,9 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
             <div><dt>Stav</dt><dd id="tState"></dd></div>
             <div><dt>Místo</dt><dd id="tVenue"></dd></div>
             <div><dt>Strava</dt><dd id="tDiet"></dd></div>
-            <div id="tTransportRow"><dt>Doprava</dt><dd id="tTransport"></dd></div>
+            <div id="tEmpRow"><dt>Osobní číslo</dt><dd id="tEmp"></dd></div>
+            <div id="tTransportRow"><dt>Doprava na akci</dt><dd id="tTransport"></dd></div>
+            <div id="tTransportBackRow"><dt>Doprava z akce</dt><dd id="tTransportBack"></dd></div>
           </dl>
         </div>
         <div class="t-actions">
@@ -173,7 +176,8 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
             <fieldset class="fs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Strava <small>(můžete zvolit více možností)</small></legend><div class="chips" id="eDiet"></div></fieldset>
             <label class="field"><span class="f-label">Alergie <small>(nepovinné)</small></span><input class="input" name="allergies" maxlength="200"></label>
             <label class="check" id="eHealth"><input type="checkbox" name="healthConsent"><span>Souhlasím se zpracováním údaje o alergii (zdravotní údaj) výhradně pro přípravu jídla na této akci.</span></label>
-            <fieldset class="fs" id="eTransportFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprava</legend><div class="chips" id="eTransport"></div><div id="eBus" class="bus-routes" hidden><span class="f-label">Směr svozového autobusu</span><div class="chips" id="eBusRoutes"></div></div></fieldset>
+            <fieldset class="fs" id="eTransportFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprava na akci</legend><div class="chips" id="eTransport"></div><small class="bus-info" id="eBusTo"></small><div id="eBus" class="bus-routes" hidden><span class="f-label">Směr svozového autobusu</span><div class="chips" id="eBusRoutes"></div></div></fieldset>
+            <fieldset class="fs" id="eBackFs" style="border:0;margin:0;padding:0;display:grid;gap:12px"><legend class="f-label" style="margin-bottom:12px">Doprava z akce</legend><div class="chips" id="eTransportBack"></div><small class="bus-info" id="eBusBack"></small></fieldset>
             <div class="edit-foot">
               <button class="btn btn-primary" type="submit" id="saveBtn">Uložit změny</button>
               <span class="saved" id="saved" role="status">✓ Uloženo</span>
@@ -208,6 +212,8 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
 
   function show(id) { ['vLoading', 'vError', 'vTicket'].forEach((x) => ($('#' + x).hidden = x !== id)); }
   const over = () => now > new Date(API.dayDate(ev.date).setHours(23, 59));
+  // po uzávěrce (CONFIG.registration.deadline) už nejde měnit účast ani údaje
+  const locked = () => over() || (!!ev.registration.deadline && now > new Date(ev.registration.deadline));
   function apply(r) { t = r.ticket; ev = r.event; client = r.client; now = new Date(r.now); }
 
   async function init() {
@@ -256,6 +262,14 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     $('#tDiet').textContent = t.diet;
     $('#tTransportRow').hidden = !(ev.registration.transport || []).length;
     $('#tTransport').textContent = t.transport || '—';
+    $('#tEmpRow').hidden = !t.empNo; $('#tEmp').textContent = t.empNo || '';
+    $('#tTransportBackRow').hidden = !(ev.registration.transportBack || []).length;
+    $('#tTransportBack').textContent = t.transportBack || '—';
+    const dn = $('#deadlineNote'), dlt = ev.registration.deadlineText;
+    dn.hidden = !dlt || over();
+    if (dlt) dn.innerHTML = locked()
+      ? `<b>Uzávěrka registrací a změn byla ${esc(dlt)}.</b>Změny už online provést nejdou. S dotazy se prosím obraťte na pořadatele.`
+      : `<b>Změny v registraci jsou možné pouze do ${esc(dlt)}.</b>Prosíme, zvažte svou účast a potvrďte ji, nebo zrušte co nejdříve.`;
     $('#tState').innerHTML = t.arrivedAt ? `<span class="badge in">Na místě od ${esc(F.time(t.arrivedAt))}</span>`
       : t.attendance === 'ANO' ? '<span class="badge ok">Účast potvrzena</span>'
       : t.attendance === 'NE' ? '<span class="badge no">Nepřijde</span>'
@@ -265,7 +279,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     if (qrFor !== t.qrText) { UI.qr($('#qr'), t.qrText, { dark: '#151827' }); qrFor = t.qrText; }
 
     // účast
-    $$('.ans').forEach((b) => { b.setAttribute('aria-pressed', String(b.dataset.a === t.attendance)); b.disabled = over(); });
+    $$('.ans').forEach((b) => { b.setAttribute('aria-pressed', String(b.dataset.a === t.attendance)); b.disabled = locked(); });
     const note = $('#attNote');
     note.hidden = true;
     const rsvpAt = API.automationAt(ev, 'rsvp');
@@ -286,7 +300,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
         note.innerHTML = `<b>Nemusíte to řešit hned.</b> ${F.day(rsvpAt.toISOString())} vám pošleme e-mail, kde stačí kliknout na Přijdu, nebo Nepřijdu.`;
       }
     }
-    $('#editPanel').hidden = t.attendance === 'NE' || over();
+    $('#editPanel').hidden = t.attendance === 'NE' || locked(); // po uzávěrce už údaje nejde měnit
     if (!$('#editPanel').hidden) fillEdit();
 
   }
@@ -297,7 +311,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
     $$('.ans').forEach((x) => (x.disabled = true));
     try { apply(await API.call('rsvp', { token, attend: b.dataset.a })); banner(b.dataset.a); render(); }
     catch (e) { UI.toast(e.message, 'err'); }
-    $$('.ans').forEach((x) => (x.disabled = over()));
+    $$('.ans').forEach((x) => (x.disabled = locked()));
   }));
 
   // ---------- úpravy ----------
@@ -308,7 +322,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
   $('#editForm').addEventListener('change', (e) => { if (e.target.name === 'transport') $('#eBus').hidden = !busOn(); });
   function fillEdit() {
     const r = ev.registration;
-    const key = JSON.stringify([t.diet, t.allergies, t.transport, t.guests, t.guestNames, t.guestDiets]);
+    const key = JSON.stringify([t.diet, t.allergies, t.transport, t.transportBack, t.guests, t.guestNames, t.guestDiets]);
     if (filledFor === key) return; filledFor = key;
     const f = $('#editForm');
     $('#eDiet').innerHTML = chips('diet', r.diets, String(t.diet || '').split(', '), 'checkbox');
@@ -319,8 +333,13 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
       $('#eTransport').innerHTML = chips('transport', r.transport, onBus ? r.busOption : cur);
       $('#eBusRoutes').innerHTML = chips('busRoute', routesOf(r), onBus ? cur.slice(pre.length) : null);
       $('#eBus').hidden = !busOn();
+      $('#eBusTo').textContent = (r.busInfo || {}).to ? '🚌 ' + r.busInfo.to : '';
     }
     else $('#eTransportFs').hidden = true;
+    if ((r.transportBack || []).length) {
+      $('#eTransportBack').innerHTML = chips('transportBack', r.transportBack, t.transportBack || r.transportBack[0]);
+      $('#eBusBack').textContent = (r.busInfo || {}).back ? '🚌 ' + r.busInfo.back : '';
+    } else $('#eBackFs').hidden = true;
     if (false) { // doprovod se neregistruje
       $('#eGuests').innerHTML = Array.from({ length: r.maxGuests + 1 }, (_, i) =>
         `<label class="chip"><input type="radio" name="guests" value="${i}" ${i === t.guests ? 'checked' : ''}><span>${i === 0 ? 'Bez doprovodu' : '+' + i}</span></label>`).join('');
@@ -353,6 +372,7 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
         token, attend: null,
         diet: diets.join(', '), diets,
         transport: busOn() ? tr + ' – ' + route : tr,
+        transportBack: ($('input[name=transportBack]:checked', f) || {}).value || '',
         allergies: f.elements.allergies.value, healthConsent: f.elements.healthConsent.checked,
         guests: g.length, guestNames: g.map((x) => $('input', x).value), guestDiets: g.map((x) => $('select', x).value),
       }));
