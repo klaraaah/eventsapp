@@ -421,14 +421,14 @@ body { background: var(--bg); overscroll-behavior: none; }
     let body = '';
     if (p && r.result === 'other') {
       const oe = r.otherEvent;
-      body = `<div class="r-name">${esc(p.name)}</div><div class="r-dept">${esc(p.dept || '')}</div>
+      body = `<div class="r-name">${esc(p.name)}</div><div class="r-dept">${esc([p.empNo ? 'č. ' + p.empNo : '', p.dept].filter(Boolean).join(' · '))}</div>
         <p class="r-text">Vstupenka je na akci <b>${esc(oe ? oe.name + ' · ' + API.fmt.day(oe.date) : p.event)}</b>, ne na tuhle.</p>`;
     } else if (p) {
       const ga = p.guestsArrived == null ? p.guests : p.guestsArrived;
       const first = p.name.split(' ')[0];
       body = `
         <div class="r-name">${esc(p.name)}</div>
-        <div class="r-dept">${esc(p.dept || '')}</div>
+        <div class="r-dept">${esc([p.empNo ? 'č. ' + p.empNo : '', p.dept].filter(Boolean).join(' · '))}</div>
         ${p.guests ? `<div class="r-guests">
           <div class="k">Doprovod<small>nahlášeno: ${p.guests}</small></div>
           <div class="stepper">
@@ -518,7 +518,7 @@ body { background: var(--bg); overscroll-behavior: none; }
         if (q !== $('#q').value.trim()) return;
         $('#results').innerHTML = r.results.length ? r.results.map((p) => `
           <li><button type="button" data-t="${esc(p.qr)}">
-            <span><b>${esc(p.name)}</b><small>${esc(p.dept || '')}${p.guests ? ' · +' + p.guests : ''}${p.attendance === 'NE' ? ' · nepřijde' : p.attendance !== 'ANO' ? ' · nepotvrzeno' : ''}</small></span>
+            <span><b>${esc(p.name)}</b><small>${esc([p.empNo ? 'č. ' + p.empNo : '', p.dept].filter(Boolean).join(' · '))}${p.guests ? ' · +' + p.guests : ''}${p.attendance === 'NE' ? ' · nepřijde' : p.attendance !== 'ANO' ? ' · nepotvrzeno' : ''}</small></span>
             ${p.arrivedAt ? `<span class="badge in">✓ ${esc(p.arrivedAt)}</span>` : '<span class="badge no">Odbavit</span>'}
           </button></li>`).join('') : '<li class="empty">Nikoho takového nemáme.</li>';
       } catch (e) {
