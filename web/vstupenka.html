@@ -241,8 +241,8 @@ main { padding: clamp(24px, 5vw, 64px) 0 96px; }
   }
   function banner(a) {
     $('#banner').innerHTML = a === 'ANO'
-      ? `<div class="banner"><div class="ico">${CHECK}</div><div><b>Díky, máme zapsáno: přijdete.</b><span>Kdyby se cokoliv změnilo, stačí kliknout na Nepřijdu.</span></div></div>`
-      : `<div class="banner no"><div class="ico">${CHECK}</div><div><b>Rozumíme, máme zapsáno: nepřijdete.</b><span>Díky, že jste dali vědět. Kdyby to nakonec šlo, klikněte na Přijdu.</span></div></div>`;
+      ? `<div class="banner"><div class="ico">${CHECK}</div><div><b>Díky, máme zapsáno: přijdete.</b><span>Potvrzení jsme Vám poslali e-mailem. Kdyby se cokoliv změnilo, stačí kliknout na Nepřijdu.</span></div></div>`
+      : `<div class="banner no"><div class="ico">${CHECK}</div><div><b>Rozumíme, máme zapsáno: nepřijdete.</b><span>Potvrzení jsme Vám poslali e-mailem. Kdyby to nakonec šlo, klikněte na Přijdu.</span></div></div>`;
   }
 
   function render() {
